@@ -10,17 +10,22 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+import os
+import pymysql
 from pathlib import Path
+from basic_django.utils.env_settings import EnvironSetting
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+pymysql.install_as_MySQLdb()
+env = EnvironSetting()
+env_value = env.get_env(base_dir=BASE_DIR)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-a1&&50@3meua(j+*py*6uhu4q!=gz488dm)=y_n46e3!7tcry="
+SECRET_KEY = env_value.str("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -37,6 +42,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "app",
 ]
 
 MIDDLEWARE = [
@@ -75,8 +81,13 @@ WSGI_APPLICATION = "basic_django.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.mysql",
+        "HOST": env_value.str("DATABASE_HOST"),
+        "NAME": env_value.str("DATABASE_NAME"),
+        "USER": env_value.str("DATABASE_USER"),
+        "PASSWORD": env_value.str("DATABASE_PASSWORD"),
+        "PORT": env_value.int("DATABASE_PORT"),
+        "OPTIONS": {"charset": "utf8mb4"},
     }
 }
 
