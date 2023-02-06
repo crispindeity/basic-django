@@ -12,3 +12,14 @@ def index(request: HttpRequest) -> HttpResponse:
             "posts": posts,
         },
     )
+
+
+def single_post_page(request: HttpRequest, pk: int) -> HttpResponse:
+    post = Post.objects.get(pk=pk)
+    return render(
+        request,
+        "app/single_page.html",
+        {
+            "post": post,
+        },
+    )
