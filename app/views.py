@@ -1,6 +1,4 @@
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 from app.models import Post
 
 
@@ -8,6 +6,11 @@ from app.models import Post
 class PostList(ListView):
     model = Post
     ordering = "-pk"
+
+
+# CBV 방식
+class PostDetail(DetailView):
+    model = Post
 
 
 # FBV 방식
@@ -22,12 +25,13 @@ class PostList(ListView):
 #     )
 
 
-def single_post_page(request: HttpRequest, pk: int) -> HttpResponse:
-    post = Post.objects.get(pk=pk)
-    return render(
-        request,
-        "app/single_page.html",
-        {
-            "post": post,
-        },
-    )
+# FBV 방식
+# def single_post_page(request: HttpRequest, pk: int) -> HttpResponse:
+#     post = Post.objects.get(pk=pk)
+#     return render(
+#         request,
+#         "app/single_page.html",
+#         {
+#             "post": post,
+#         },
+#     )
